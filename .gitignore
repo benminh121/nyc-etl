@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+/data/*
+/jars/*
+**/logs/
+test.py
+/airflow/logs/*
+.env
+.vscode/
+data/
+trino/
+jars/
+profile.yml

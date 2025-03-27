@@ -1,0 +1,6 @@
+datalake:
+  endpoint:  localhost:9000
+  bucket_name_1: raw
+  bucket_name_2: warehouse
+  access_key: benminh1201
+  secret_key: benminh1201

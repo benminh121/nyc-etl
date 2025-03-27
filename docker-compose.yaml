@@ -1,0 +1,67 @@
+---
+version: "3.8"
+services:
+# Parquet files stored in MinIO object storage
+  minio:
+    image: minio/minio
+    container_name: datalake-minio
+    hostname: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_storage:/data
+    environment:
+      MINIO_ACCESS_KEY: $MINIO_ACCESS_KEY
+      MINIO_SECRET_KEY: $MINIO_SECRET_KEY
+    command: server --console-address ":9001" /data
+
+  starrocks-fe-0:
+    image: starrocks/fe-ubuntu:latest
+    hostname: starrocks-fe-0
+    container_name: starrocks-fe-0
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /opt/starrocks/fe_entrypoint.sh starrocks-fe-0
+    environment:
+      - HOST_TYPE=FQDN
+      - TZ=Asia/Shanghai
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+    ports:
+      - "8030:8030"
+      - "9020:9020"
+      - "9030:9030"
+    volumes:
+      - singleton_fe0_data:/opt/starrocks/fe/meta
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9030"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  starrocks-be-0:
+    image: starrocks/be-ubuntu:latest
+    hostname: starrocks-be-0
+    container_name: starrocks-be-0
+    command:
+      - /bin/bash
+      - -c
+      - |
+        /opt/starrocks/be_entrypoint.sh starrocks-fe-0
+    environment:
+      - HOST_TYPE=FQDN
+      - TZ=Asia/Shanghai
+    ports:
+      - "8040:8040"
+    depends_on:
+      - starrocks-fe-0
+    volumes:
+      - singleton_be0_data:/opt/starrocks/be/storage
+
+volumes:
+  singleton_fe0_data:
+  singleton_be0_data:
+  minio_storage:
