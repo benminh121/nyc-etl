@@ -21,4 +21,4 @@ trino/
 jars/
 profile.yml
 
-Example/
+Example/*.ipynb
