@@ -7,8 +7,10 @@ from airflow.utils.dates import days_ago
 from airflow.operators.bash import BashOperator
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
 from scripts.extract_load import extract_load
+
 ###############################################
 # Parameters & Arguments
 ###############################################
@@ -25,11 +27,12 @@ default_args = {
     "retries": 1,
 }
 
+
 def download_upload_dag(
-    dag,
-    url_template,
-    local_path_template,
-    minio_path_template
+        dag,
+        url_template,
+        local_path_template,
+        minio_path_template
 ):
     with dag:
         download_dataset_task = BashOperator(
@@ -40,22 +43,26 @@ def download_upload_dag(
         extract_load_task = PythonOperator(
             task_id="extract_load",
             python_callable=extract_load,
-            op_kwargs={'endpoint_url': MINIO_ENDPOINT, 'access_key': MINIO_ACCESS_KEY, 'secret_key': MINIO_SECRET_KEY, 'source': local_path_template, 'dest': minio_path_template}
+            op_kwargs={'endpoint_url': MINIO_ENDPOINT, 'access_key': MINIO_ACCESS_KEY, 'secret_key': MINIO_SECRET_KEY,
+                       'source': local_path_template, 'dest': minio_path_template}
         )
 
         rm_task = BashOperator(
             task_id="rm_task",
             bash_command=f"rm {local_path_template}"
         )
-        
+
         download_dataset_task >> extract_load_task >> rm_task
+
 
 # https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2019-01.parquet
 URL_PREFIX = 'https://d37ci6vzurychx.cloudfront.net/trip-data'
 
 YELLOW_TAXI_FILE_TEMPLATE = URL_PREFIX + '/yellow_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
-YELLOW_OUTPUT_FILE_TEMPLATE = AIRFLOW_HOME + '/data/output_yellow_tripdata{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
-YELLOW_TAXI_MINIO_PATH_TEMPLATE = "yellow_tripdata/{{ execution_date.strftime(\'%Y\') }}/yellow_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet"
+YELLOW_OUTPUT_FILE_TEMPLATE = AIRFLOW_HOME + ('/data/output_yellow_tripdata{{ execution_date.strftime(\'%Y-%m\') '
+                                              '}}.parquet')
+YELLOW_TAXI_MINIO_PATH_TEMPLATE = ("yellow_tripdata/{{ execution_date.strftime(\'%Y\') }}/yellow_tripdata_{{ "
+                                   "execution_date.strftime(\'%Y-%m\') }}.parquet")
 
 yellow_taxi_data_dag = DAG(
     dag_id="yellow_taxi_data_v1",
@@ -75,9 +82,10 @@ download_upload_dag(
 )
 
 GREEN_TAXI_FILE_TEMPLATE = URL_PREFIX + '/green_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
-GREEN_OUTPUT_FILE_TEMPLATE = AIRFLOW_HOME + '/data/output_green_tripdata{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
-GREEN_TAXI_MINIO_PATH_TEMPLATE = "green_tripdata/{{ execution_date.strftime(\'%Y\') }}/green_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet"
-
+GREEN_OUTPUT_FILE_TEMPLATE = AIRFLOW_HOME + ('/data/output_green_tripdata{{ execution_date.strftime(\'%Y-%m\') '
+                                             '}}.parquet')
+GREEN_TAXI_MINIO_PATH_TEMPLATE = ("green_tripdata/{{ execution_date.strftime(\'%Y\') }}/green_tripdata_{{ "
+                                  "execution_date.strftime(\'%Y-%m\') }}.parquet")
 
 green_taxi_data_dag = DAG(
     dag_id="green_taxi_data_v1",
@@ -98,7 +106,8 @@ download_upload_dag(
 
 FHV_TAXI_FILE_TEMPLATE = URL_PREFIX + '/fhv_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
 FHV_OUTPUT_FILE_TEMPLATE = AIRFLOW_HOME + '/data/output_fhv_tripdata{{ execution_date.strftime(\'%Y-%m\') }}.parquet'
-FHV_TAXI_MINIO_PATH_TEMPLATE = "fhv_tripdata/{{ execution_date.strftime(\'%Y\') }}/fhv_tripdata_{{ execution_date.strftime(\'%Y-%m\') }}.parquet"
+FHV_TAXI_MINIO_PATH_TEMPLATE = ("fhv_tripdata/{{ execution_date.strftime(\'%Y\') }}/fhv_tripdata_{{ "
+                                "execution_date.strftime(\'%Y-%m\') }}.parquet")
 
 fhv_taxi_data_dag = DAG(
     dag_id="fhv_taxi_data_v1",

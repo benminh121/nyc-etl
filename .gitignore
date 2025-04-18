@@ -12,13 +12,12 @@ wheels/
 /data/*
 /jars/*
 **/logs/
-test.py
 /airflow/logs/*
 .env
 .vscode/
 data/
-trino/
+metastore_db/
 jars/
 profile.yml
-
-Example/*.ipynb
+derby.log
+airflow/logs/*

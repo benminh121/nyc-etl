@@ -3,13 +3,12 @@ name = "nyc-new"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
-    "dbt-core>=1.9.3",
-    "dbt-postgres>=1.9.0",
-    "dbt-starrocks>=1.9.0",
+    "black>=25.1.0",
     "matplotlib>=3.10.1",
     "minio>=7.2.15",
+    "notebook>=7.4.0",
     "pandas>=2.2.3",
     "psycopg2-binary>=2.9.10",
     "pyarrow>=19.0.1",
@@ -18,8 +17,6 @@ dependencies = [
     "pyyaml>=6.0.2",
     "s3fs>=2025.3.0",
     "scikit-learn>=1.6.1",
-    "setuptools>=77.0.3",
-    "sqlalchemy>=2.0.39",
 ]
 
 [dependency-groups]

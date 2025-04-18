@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Thu Mar 27 22:33:20 NZDT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0195-d6f2-f1ff-00000d9eccd0 
+Wed Apr 16 17:29:13 NZST 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0196-3d12-9fde-00000d250c20 
 on database directory /Users/benminh1201/Downloads/nyc_new/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@67424e82 
-Loaded from file:/Users/benminh1201/Downloads/nyc_new/.venv/lib/python3.13/site-packages/pyspark/jars/derby-10.14.2.0.jar
+Loaded from file:/Users/benminh1201/spark/spark-3.5.5-bin-hadoop3/jars/derby-10.14.2.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=11.0.26+7-LTS-187
 user.dir=/Users/benminh1201/Downloads/nyc_new
 os.name=Mac OS X
 os.arch=aarch64
-os.version=14.7.4
+os.version=14.7.5
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
